@@ -18,17 +18,6 @@ const UserProvider = ({ children }) => {
     useEffect(() => {
         getUsers();
     }, []);
-
-    useEffect(() => {
-        if (!isLoading) {
-            const newUsers = [...users];
-            const indexUser = newUsers.findIndex(
-                (u) => u._id === currentUser._id
-            );
-            newUsers[indexUser] = currentUser;
-            setUsers(newUsers);
-        }
-    }, [currentUser]);
     useEffect(() => {
         if (error !== null) {
             toast(error);
@@ -44,6 +33,16 @@ const UserProvider = ({ children }) => {
             errorCatcher(error);
         }
     }
+    useEffect(() => {
+        if (!isLoading) {
+            const newUsers = [...users];
+            const indexUser = newUsers.findIndex(
+                (u) => u._id === currentUser._id
+            );
+            newUsers[indexUser] = currentUser;
+            setUsers(newUsers);
+        }
+    }, [currentUser]);
     function errorCatcher(error) {
         const { message } = error.response.data;
         setError(message);

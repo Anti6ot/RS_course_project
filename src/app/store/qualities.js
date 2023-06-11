@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import qualityService from "../services/quality.service";
+import isOutdated from "../utils/isOutdated";
 
 const qualitiesSlice = createSlice({
     name: "qualities",
@@ -13,12 +14,12 @@ const qualitiesSlice = createSlice({
         qualitiesRequested: (state) => {
             state.isLoading = true;
         },
-        qualitiesRecived: (state, action) => {
+        qualitiesReceived: (state, action) => {
             state.entities = action.payload;
             state.lastFetch = Date.now();
             state.isLoading = false;
         },
-        qualitiesRequestFiled: (state, action) => {
+        qualitiesRequestFailed: (state, action) => {
             state.error = action.payload;
             state.isLoading = false;
         }
@@ -26,14 +27,8 @@ const qualitiesSlice = createSlice({
 });
 
 const { reducer: qualitiesReducer, actions } = qualitiesSlice;
-const { qualitiesRequested, qualitiesRecived, qualitiesRequestFiled } = actions;
-
-function isOutdated(date) {
-    if (Date.now() - date > 10 * 60 * 1000) {
-        return true;
-    }
-    return false;
-}
+const { qualitiesRequested, qualitiesReceived, qualitiesRequestFailed } =
+    actions;
 
 export const loadQualitiesList = () => async (dispatch, getState) => {
     const { lastFetch } = getState().qualities;
@@ -41,9 +36,9 @@ export const loadQualitiesList = () => async (dispatch, getState) => {
         dispatch(qualitiesRequested());
         try {
             const { content } = await qualityService.fetchAll();
-            dispatch(qualitiesRecived(content));
+            dispatch(qualitiesReceived(content));
         } catch (error) {
-            dispatch(qualitiesRequestFiled(error.message));
+            dispatch(qualitiesRequestFailed(error.message));
         }
     }
 };

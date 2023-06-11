@@ -4,8 +4,8 @@ import professionsReducer from "./professions";
 import usersReducer from "./users";
 
 const rootReducer = combineReducers({
-    professions: professionsReducer,
     qualities: qualitiesReducer,
+    professions: professionsReducer,
     users: usersReducer
 });
 
