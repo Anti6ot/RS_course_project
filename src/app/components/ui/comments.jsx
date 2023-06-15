@@ -10,27 +10,17 @@ import {
     removeComments
 } from "../../store/comments";
 import { useParams } from "react-router-dom";
-import { getCurrentUserId } from "../../store/users";
-import { nanoid } from "nanoid";
 
 const Comments = () => {
     const { userId } = useParams();
     const dispatch = useDispatch();
-    const currentUserId = useSelector(getCurrentUserId());
     useEffect(() => {
         dispatch(loadCommentsList(userId));
     }, [userId]);
     const comments = useSelector(getComments());
     const isLoading = useSelector(getCommentsLoadingStatus());
     const handleSubmit = (data) => {
-        const comment = {
-            ...data,
-            _id: nanoid(),
-            pageId: userId,
-            created_at: Date.now(),
-            userId: currentUserId
-        };
-        dispatch(createComments(comment));
+        dispatch(createComments({ ...data, pageId: userId }));
     };
     const handleRemoveComment = (id) => {
         dispatch(removeComments(id));

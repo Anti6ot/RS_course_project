@@ -60,9 +60,10 @@ const usersSlice = createSlice({
             state.dataLoaded = false;
         },
         userUpdated: (state, action) => {
-            state.entities.find((e) =>
-                e._id === action.payload._id ? action.payload : e
+            const indexEl = state.entities.findIndex(
+                (e) => e._id === action.payload._id
             );
+            state.entities[indexEl] = action.payload;
         },
         userUpdatedFailed: (state, action) => {
             state.error = action.payload;
